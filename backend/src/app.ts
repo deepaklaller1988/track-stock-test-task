@@ -1,6 +1,7 @@
 // app.ts
 import express from "express";
 import authRouter from "./router/authRouter";
+import thresholdRouter from "./router/thresholdRouter";
 import cors from "cors";
 
 const app = express();
@@ -17,6 +18,7 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 app.use("/auth", authRouter);
+app.use("/threshold", thresholdRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
