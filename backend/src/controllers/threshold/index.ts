@@ -5,15 +5,14 @@ const createThreshold = async (req: any, res: any) => {
     const { id, stock, price, symbol } = req.body;
   
     try {
-      const userRecord = await admin.auth().getUser(id);
+      const userRecord:any = await admin.auth().getUser(id);
   
       await admin.firestore().collection("users").doc(userRecord.uid).set({
-        email: userRecord.email,
-        username: userRecord.displayName || "Unknown",
         stockName: symbol,
         price: price,
         symbol: stock,
-      }, { merge: true }); // Use merge to update existing document instead of overwriting
+        threshold:true
+      }, { merge: true });
   
       return res.status(201).json({ message: "User updated with threshold", uid: userRecord.uid });
     } catch (error) {

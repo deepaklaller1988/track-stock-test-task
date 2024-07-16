@@ -28,13 +28,13 @@ const ThresholdForm: React.FC<ThresholdFormProps> = ({ stock, formData, onSubmit
                     <input type="text" id="stock-input" onChange={handleChange} />
                     {stock.length > 0 && (
                         <ul className="border border-gray-300 mt-2 max-h-40 overflow-auto">
-                            {stock.map((item, index) => (
+                            {stock.map((item:any, index) => (
                                 <li
                                     key={index}
                                     className="p-2 cursor-pointer hover:bg-gray-200"
-                                    onClick={() => handleSelect(item['1. symbol'],item['2. name'])}
+                                    onClick={() => handleSelect(item.ticker,item.name)}
                                 >
-                                    {item['1. symbol']} - {item['2. name']}
+                                    {item.ticker} - {item.name}
                                 </li>
                             ))}
                         </ul>

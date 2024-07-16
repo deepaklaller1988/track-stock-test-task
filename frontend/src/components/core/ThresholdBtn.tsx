@@ -26,7 +26,9 @@ const ThresholdBtn = () => {
 
     useEffect(() => {
         if (input.length > 0) {
-            fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${input}&apikey=RGQV6YBI0HA8JU1Q`)
+            fetch(`https://api.polygon.io/v3/reference/tickers?active=true&limit=100&apiKey=WXpFlTn5T2lKK_VciXVVlTHQb4HvSLwM&sort=ticker&search=${input}`)
+            // fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${input}&apikey=RGQV6YBI0HA8JU1Q`)
+            
                 .then(res => {
                     if (!res.ok) {
                         throw new Error('Failed to fetch data');
@@ -34,7 +36,8 @@ const ThresholdBtn = () => {
                     return res.json();
                 })
                 .then(data => {
-                    setStockList(data.bestMatches.slice(0, 5)); // Limit to 5 results
+                    // setStockList(data.bestMatches.slice(0, 5)); // Limit to 5 results
+                    setStockList(data.results.slice(0, 5)); // Limit to 5 results
                 })
                 .catch(error => {
                     console.error('Error fetching stock symbols:', error);
