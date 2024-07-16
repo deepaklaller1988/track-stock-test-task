@@ -1,5 +1,5 @@
 // controllers/authController.ts
-import admin from "../../config/adminConfig";
+import {admin} from "../../config/adminConfig";
 import  bcrypt from 'bcrypt';
 const saltRounds = 10;
 
@@ -31,13 +31,25 @@ const signup = async (req: any, res: any) => {
   }
 };
 
-const login = async (req: any, res: any) => {
+const login = async (req:any, res:any) => {
   const { email, password } = req.body;
 
   try {
     const userRecord = await admin.auth().getUserByEmail(email);
     const userDoc = await admin.firestore().collection('users').doc(userRecord.uid).get();
-    const storedHashedPassword = userDoc.data()?.password;
+    console.log(userDoc,"userDoc");
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: "User not found in Firestore" });
+    }
+
+    const userData = userDoc.data();
+    console.log(userData,"user");
+    const storedHashedPassword = userData?.password;
+
+    if (!storedHashedPassword) {
+      return res.status(500).json({ error: "Password not found in Firestore" });
+    }
 
     const passwordMatch = await bcrypt.compare(password, storedHashedPassword);
 
@@ -46,7 +58,7 @@ const login = async (req: any, res: any) => {
     }
 
     return res.status(200).json({ message: "Login successful", uid: userRecord.uid });
-  } catch (error: any) {
+  } catch (error:any) {
     console.error("Error logging in:", error);
     if (error.code === "auth/user-not-found") {
       return res.status(404).json({ error: "Email not found" });
@@ -55,6 +67,7 @@ const login = async (req: any, res: any) => {
     }
   }
 };
+
 
 
 export { signup, login };

@@ -1,5 +1,5 @@
 // controllers/authController.ts
-import admin from "../../config/adminConfig"
+import {admin} from "../../config/adminConfig"
 
 const createThreshold = async (req: any, res: any) => {
     const { id, stock, price, symbol } = req.body;

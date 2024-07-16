@@ -1,4 +1,3 @@
-// adminconfig.ts
 import admin from "firebase-admin";
 import * as serviceAccount from './firebaseAdminKey.json';
 
@@ -7,4 +6,7 @@ admin.initializeApp({
 
 });
 
-export default admin;
+const db = admin.firestore();
+console.log(db,"db===");
+
+export {admin,db};
