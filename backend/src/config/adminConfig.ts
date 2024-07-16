@@ -1,8 +1,10 @@
 // adminconfig.ts
 import admin from "firebase-admin";
-import ServiceAccount from "./firebaseAdminKey.json";
+import * as serviceAccount from './firebaseAdminKey.json';
+
 admin.initializeApp({
-  credential: admin.credential.cert(ServiceAccount),
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+
 });
 
 export default admin;

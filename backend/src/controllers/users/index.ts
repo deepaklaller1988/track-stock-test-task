@@ -1,27 +1,33 @@
 // controllers/authController.ts
-import admin from "../../config/adminConfig"
+import admin from "../../config/adminConfig";
+import  bcrypt from 'bcrypt';
+const saltRounds = 10;
 
 const signup = async (req: any, res: any) => {
   const { email, password, username } = req.body;
 
   try {
-    const userRecord :any= await admin.auth().createUser({
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const userRecord: any = await admin.auth().createUser({
       email,
-      password,
+      password: hashedPassword, 
     });
 
     await admin.firestore().collection("users").doc(userRecord.uid).set({
       email: userRecord.email,
-      username: username,
-      password:userRecord.password
+      username,
+      password: hashedPassword 
     });
 
-    return res
-      .status(201)
-      .json({ message: "User created", uid: userRecord.uid });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return res.status(500).json({ error: "Error creating user" });
+    return res.status(201).json({ message: "User created", uid: userRecord.uid });
+  } catch (error: any) {
+    console.error("Error signing up:", error);
+    if (error.code === 'auth/email-already-exists') {
+      return res.status(400).json({ error: "Email already exists" });
+    } else {
+      return res.status(500).json({ error: "Signup failed" });
+    }
   }
 };
 
@@ -30,11 +36,12 @@ const login = async (req: any, res: any) => {
 
   try {
     const userRecord = await admin.auth().getUserByEmail(email);
-
     const userDoc = await admin.firestore().collection('users').doc(userRecord.uid).get();
-    const storedPassword = userDoc.data()?.password;
+    const storedHashedPassword = userDoc.data()?.password;
 
-    if (storedPassword !== password) {
+    const passwordMatch = await bcrypt.compare(password, storedHashedPassword);
+
+    if (!passwordMatch) {
       return res.status(401).json({ error: "Password Incorrect" });
     }
 
@@ -43,8 +50,6 @@ const login = async (req: any, res: any) => {
     console.error("Error logging in:", error);
     if (error.code === "auth/user-not-found") {
       return res.status(404).json({ error: "Email not found" });
-    } else if (error.code === "auth/wrong-password") {
-      return res.status(401).json({ error: "Password incorrect" });
     } else {
       return res.status(500).json({ error: "Login failed" });
     }
