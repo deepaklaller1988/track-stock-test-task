@@ -4,7 +4,7 @@ import express from "express";
 import authRouter from "./router/authRouter";
 import thresholdRouter from "./router/thresholdRouter";
 import cors from "cors";
-import admin from "./config/adminConfig";
+import { admin } from "./config/adminConfig";
 import { doc, updateDoc } from "firebase/firestore";
 import dotenv from "dotenv";
 dotenv.config();
