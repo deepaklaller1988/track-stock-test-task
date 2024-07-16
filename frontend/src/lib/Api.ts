@@ -1,4 +1,3 @@
-import { handleError } from "../lib/errorHandler";
 
 export interface Res {
   success: boolean;
@@ -75,7 +74,7 @@ class API {
         }
       } catch (error: any) {
         reject(error);
-        handleError(error.code);
+        return error.code
       }
     });
   }
@@ -94,13 +93,13 @@ class API {
       res.resent = resent;
 
       if (!res.success) {
-        handleError(res);
+        return res
       }
 
       return res;
     } catch (error) {
       console.error("Error parsing response:", error);
-      throw handleError(error); // Rethrow the error to propagate it
+      throw error;
     }
   }
 }

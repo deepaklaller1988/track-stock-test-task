@@ -1,12 +1,14 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getToken } from "@/lib/token";
 
 const useAuth = () => {
   const router = useRouter();
+  const token= getToken
+
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (!token) {
       router.push("/auth/login");
     }

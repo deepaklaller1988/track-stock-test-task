@@ -4,7 +4,6 @@ import Button from "../buttons/Button";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { useMutation } from "@tanstack/react-query";
 import API from "@/lib/Api";
-import { handleError } from "@/lib/errorHandler";
 import { useRouter } from "next/navigation";
 
 const AuthForm = ({ type }: any) => {
@@ -31,7 +30,7 @@ const AuthForm = ({ type }: any) => {
       router.push("/dashboard");
     },
     onError: async (error: any) => {
-      const message = handleError(error?.error?.code);
+      const message = (error?.error);
       setErrorMessage(message);
     },
   });
@@ -126,9 +125,7 @@ const AuthForm = ({ type }: any) => {
                         <input
                           id={fieldName}
                           className="p-2 px-4 rounded-xl border text-black hover:shadow-extra-blur duration-300"
-                          type={
-                            fieldName.includes("password") ? "password" : "text"
-                          }
+                          type="password"
                           name={fieldName}
                           placeholder={
                             fieldName === "repeatPassword"

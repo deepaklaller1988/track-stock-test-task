@@ -5,7 +5,7 @@ const signup = async (req: any, res: any) => {
   const { email, password, username } = req.body;
 
   try {
-    const userRecord = await admin.auth().createUser({
+    const userRecord :any= await admin.auth().createUser({
       email,
       password,
     });
@@ -13,6 +13,7 @@ const signup = async (req: any, res: any) => {
     await admin.firestore().collection("users").doc(userRecord.uid).set({
       email: userRecord.email,
       username: username,
+      password:userRecord.password
     });
 
     return res
@@ -29,9 +30,15 @@ const login = async (req: any, res: any) => {
 
   try {
     const userRecord = await admin.auth().getUserByEmail(email);
-    return res
-      .status(200)
-      .json({ message: "Login successful", uid: userRecord.uid });
+
+    const userDoc = await admin.firestore().collection('users').doc(userRecord.uid).get();
+    const storedPassword = userDoc.data()?.password;
+
+    if (storedPassword !== password) {
+      return res.status(401).json({ error: "Password Incorrect" });
+    }
+
+    return res.status(200).json({ message: "Login successful", uid: userRecord.uid });
   } catch (error: any) {
     console.error("Error logging in:", error);
     if (error.code === "auth/user-not-found") {
@@ -43,5 +50,6 @@ const login = async (req: any, res: any) => {
     }
   }
 };
+
 
 export { signup, login };
