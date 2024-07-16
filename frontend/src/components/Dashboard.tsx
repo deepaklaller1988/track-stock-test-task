@@ -1,11 +1,14 @@
 
 import Link from 'next/link';
 import ThresholdBtn from './core/ThresholdBtn';
+import React, { useEffect } from 'react'
+import Header from './core/Header';
 
 const Dashboard = ({ stockData, trendingData }: any) => {
     return (
         <div className="bg-gray-100 p-4">
             <div className="container mx-auto">
+                <Header />
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold">Stock Market Dashboard</h1>

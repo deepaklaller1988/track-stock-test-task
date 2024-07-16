@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "src", // This must be specified if "paths" is.
+    "paths": {
+      "@controllers/*": [
+        "controllers/*"
+      ] // This mapping is relative to "baseUrl"
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src"
+, "firebase.ts"  ]
+}
